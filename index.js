@@ -19,9 +19,10 @@ async function searchPokemon(pokemonName) {
   let getPokemonJson = `https://murmuring-cove-95500.herokuapp.com/api/pokemon/${pokemonName}`;
   try {
     const pokemonJsonData = await axios.get(getPokemonJson);
+    lunchSuccessMessageBox();
     return pokemonJsonData["data"];
   } catch (e) {
-    throw e;
+    lunchErrorMessageBox();
   }
 }
 
@@ -56,14 +57,19 @@ async function createDomPokemonTypes(json) {
     const newType = document.createElement("p");
     newType.textContent = type;
     newType.addEventListener("click", async (e) => {
-      const getRelatedPokemon = await axios.get(
-        `https://murmuring-cove-95500.herokuapp.com/api/type/${e.currentTarget.textContent}`
-      );
+      try {
+        const getRelatedPokemon = await axios.get(
+          `https://murmuring-cove-95500.herokuapp.com/api/type/${e.currentTarget.textContent}`
+        );
 
-      if (!document.getElementById("related-pokemon")) {
-        generatedRelatedPokemon(getRelatedPokemon);
-      } else {
-        document.getElementById("related-pokemon").remove();
+        if (!document.getElementById("related-pokemon")) {
+          generatedRelatedPokemon(getRelatedPokemon);
+        } else {
+          document.getElementById("related-pokemon").remove();
+        }
+        lunchSuccessReturnTypes();
+      } catch (e) {
+        lunchErrorMessageBox();
       }
     });
 
@@ -121,6 +127,104 @@ document.getElementById("btn").addEventListener("click", async (e) => {
     document.getElementById("related-pokemon").remove();
   } catch (e) {}
 
-  createDomFromApi(searchBox.value);
+  if (searchBox.value.length < 1) {
+    // lunchBadInputMessageBox();
+    lunchBadInputMessageBox();
+  } else {
+    createDomFromApi(searchBox.value);
+  }
   searchBox.value = "";
 });
+
+/*
+    Aim ( Personal Additon = Message Box For success and Errors: createSuccessMssage(),RemoveSuccessMssage(): the function createSuccessMssage will create the pop up div with the inputs fields (messageColor,messageTitle, message,emoji,divbackground), RemoveSuccessMssage function will connect to the dismiss function and remove the div when clicked, then the rest of the functions (lunchSuccessMessageBox(), lunchErrorMessageBox(), lunchBadInputMessageBox(), lunchDeletedSuccessfulMessageBox()) will lunch different messages popups when being called, and will be removed when dismiss button gets clicked
+*/
+
+function createSuccessMssage(
+  messageColor,
+  messageTitle,
+  message,
+  emoji,
+  divbackground
+) {
+  const successMssageBox = document.createElement("div");
+  successMssageBox.classList.add("popup");
+  successMssageBox.classList.add("center");
+  const icon = document.createElement("div");
+  icon.classList.add("icon");
+  const iconEmoji = document.createElement("i");
+  iconEmoji.textContent = emoji;
+  iconEmoji.classList.add("fa");
+  iconEmoji.classList.add("fa-check");
+  icon.appendChild(iconEmoji);
+  successMssageBox.appendChild(icon);
+  const title = document.createElement("div");
+  title.classList.add("title");
+  title.textContent = messageTitle; // success/ Error
+  title.style.color = messageColor;
+  successMssageBox.appendChild(title);
+  const description = document.createElement("div");
+  description.classList.add("description");
+  description.textContent = message; // enter the message
+  successMssageBox.appendChild(description);
+  const dismissBtn = document.createElement("div");
+  dismissBtn.classList.add("dismiss-btn");
+  const dismissPopupBtn = document.createElement("button");
+  dismissPopupBtn.setAttribute("id", "dismiss-popup-btn");
+  dismissPopupBtn.textContent = "Dismiss";
+  dismissPopupBtn.addEventListener("click", RemoveSuccessMssage);
+  dismissBtn.appendChild(dismissPopupBtn);
+  successMssageBox.appendChild(dismissBtn);
+  successMssageBox.setAttribute("id", "successMssageBox");
+  successMssageBox.style.zIndex = 200;
+  successMssageBox.style.backgroundColor = divbackground;
+  const body = document.body;
+  body.append(successMssageBox);
+}
+
+function RemoveSuccessMssage() {
+  const successMssageBox = document.getElementById("successMssageBox");
+  successMssageBox.remove();
+}
+
+function lunchErrorMessageBox() {
+  createSuccessMssage(
+    "red",
+    "Error",
+    "We are sorry, the Pokemon you've searched is not exist",
+    "❌",
+    "white"
+  );
+  const successMssageBox = document.getElementById("successMssageBox");
+  successMssageBox.classList.add("active");
+}
+
+function lunchBadInputMessageBox() {
+  createSuccessMssage("red", "Error", "Must Insert a Name", "❌", "white");
+  const successMssageBox = document.getElementById("successMssageBox");
+  successMssageBox.classList.add("active");
+}
+
+function lunchSuccessMessageBox() {
+  createSuccessMssage(
+    "green",
+    "Success",
+    "Check Out Your Selected Pokemon!",
+    "✔️",
+    "white"
+  );
+  const successMssageBox = document.getElementById("successMssageBox");
+  successMssageBox.classList.add("active");
+}
+
+function lunchSuccessReturnTypes() {
+  createSuccessMssage(
+    "green",
+    "Success",
+    "Check Out All Related Pokemons! Lets Go Pokemon!!!",
+    "✔️",
+    "white"
+  );
+  const successMssageBox = document.getElementById("successMssageBox");
+  successMssageBox.classList.add("active");
+}
