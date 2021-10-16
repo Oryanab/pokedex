@@ -43,8 +43,6 @@ async function createDomFromApi(pokemon) {
   createDomPokemonTypes(pokemonJsonData);
   createDomPokemonImg(pokemonJsonData);
 }
-//  bulbasaur
-// createDomFromApi("pidgey");
 
 /*
   createDomPokemonTypes: Create the Types Section
@@ -83,7 +81,6 @@ async function createDomPokemonTypes(json) {
 async function createDomPokemonImg(json) {
   const pokemonImg = document.querySelector("#poke-image");
   const pokemonJsonData = await json;
-  // img functionality
   pokemonImg.setAttribute("src", pokemonJsonData["sprites"]["front_default"]);
   pokemonImg.addEventListener("mouseover", (e) => {
     return (e.currentTarget.src = "".concat(
@@ -128,7 +125,6 @@ document.getElementById("btn").addEventListener("click", async (e) => {
   } catch (e) {}
 
   if (searchBox.value.length < 1) {
-    // lunchBadInputMessageBox();
     lunchBadInputMessageBox();
   } else {
     createDomFromApi(searchBox.value);
