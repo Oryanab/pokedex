@@ -19,13 +19,11 @@ async function searchPokemon(pokemonName) {
   let getPokemonJson = `https://murmuring-cove-95500.herokuapp.com/api/pokemon/${pokemonName}`;
   try {
     const pokemonJsonData = await axios.get(getPokemonJson);
-    console.log(pokemonJsonData["data"]);
     return pokemonJsonData["data"];
   } catch (e) {
     throw e;
   }
 }
-searchPokemon("ditto");
 
 // get all parameters and write all in html this will happen on Click
 async function createDomFromApi(pokemon) {
@@ -44,33 +42,32 @@ async function createDomFromApi(pokemon) {
   createDomPokemonTypes(pokemonJsonData);
   createDomPokemonImg(pokemonJsonData);
 }
-createDomFromApi("bulbasaur");
+//  bulbasaur
+// createDomFromApi("pidgey");
 
 /*
   createDomPokemonTypes: Create the Types Section
 */
 async function createDomPokemonTypes(json) {
   const pokemonTypes = document.querySelector("#pokemon-types");
+  pokemonTypes.innerHTML = "";
   const pokemonJsonData = await json;
   for (let type of pokemonJsonData["types"]) {
     const newType = document.createElement("p");
-    const spanArrow = document.createElement("span");
-    const typeRelatedUl = document.createElement("ul");
-    typeRelatedUl.setAttribute("id", "related-pokemon");
-
-    spanArrow.setAttribute("id", "span-arrow");
-    spanArrow.textContent = " ▶";
     newType.textContent = type;
     newType.addEventListener("click", async (e) => {
       const getRelatedPokemon = await axios.get(
-        `https://murmuring-cove-95500.herokuapp.com/api/type/${newType.textContent}`
+        `https://murmuring-cove-95500.herokuapp.com/api/type/${e.currentTarget.textContent}`
       );
 
-      generatedRelatedPokemon(getRelatedPokemon);
+      if (!document.getElementById("related-pokemon")) {
+        generatedRelatedPokemon(getRelatedPokemon);
+      } else {
+        document.getElementById("related-pokemon").remove();
+      }
     });
 
     pokemonTypes.appendChild(newType);
-    newType.appendChild(typeRelatedUl);
   }
 }
 
@@ -95,26 +92,35 @@ async function createDomPokemonImg(json) {
 }
 
 async function generatedRelatedPokemon(json) {
-  const relatedPokemon = document.querySelector("#related-pokemon");
+  const resultDiv = document.querySelector("#result-div");
+  const relatedPokemon = document.createElement("p");
+  relatedPokemon.setAttribute("id", "related-pokemon");
+  relatedPokemon.textContent = ``;
+  const relatedPokemonUl = document.createElement("ul");
+
   const returnJson = await json;
+  relatedPokemon.textContent = `Type: ${returnJson.data.name} Related Pokemon:`;
   const allResults = returnJson["data"]["pokemons"];
   for (let pokemon in allResults) {
-    console.log(allResults[pokemon].name);
     const newParagraph = document.createElement("p");
     newParagraph.textContent = allResults[pokemon].name;
-    relatedPokemon.appendChild(newParagraph);
+    newParagraph.addEventListener("click", async (e) => {
+      document.getElementById("related-pokemon").remove();
+      createDomFromApi(e.currentTarget.textContent);
+    });
+    relatedPokemonUl.appendChild(newParagraph);
   }
+
+  relatedPokemon.appendChild(relatedPokemonUl);
+  resultDiv.appendChild(relatedPokemon);
 }
 
-// button.addEventListener("click", (e) => {
-//   if (button.textContent === "▶") {
-//     button.textContent = "▼";
-//     ul.style.display = "block";
-//   } else {
-//     button.textContent = "▶";
-//     ul.style.display = "none";
-//   }
+document.getElementById("btn").addEventListener("click", async (e) => {
+  const searchBox = document.getElementById("textarea");
+  try {
+    document.getElementById("related-pokemon").remove();
+  } catch (e) {}
 
-{
-  /* <p>Types:<ul id ='pokemon-types'></ul></p> */
-}
+  createDomFromApi(searchBox.value);
+  searchBox.value = "";
+});
