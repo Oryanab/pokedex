@@ -1,19 +1,5 @@
 "use strict";
 
-/*
-code plan:
-- when user click "check my pokemon"
-- 2 get request are sent:
-- getPokemon: https://murmuring-cove-95500.herokuapp.com/api/pokemon/{name}
-- Dom: generate: name, height, weight, types(array), image front, btn-catch status
-- Events: 
-- image-mouse-in-out = show image back
-- pokemon catch status (get) = https://murmuring-cove-95500.herokuapp.com/api/collection/status/{pokmonId}
-- catch pokemon (post) = https://murmuring-cove-95500.herokuapp.com/api/collection/catch (post json from getPokemon)
-- release pokemon (delete) = https://murmuring-cove-95500.herokuapp.com/api/collection/release/{pokmonId}
-
-*/
-
 // get the pokemon json data:
 async function searchPokemon(pokemonName) {
   let getPokemonJson = `https://murmuring-cove-95500.herokuapp.com/api/pokemon/${pokemonName}`;
@@ -131,10 +117,6 @@ document.getElementById("btn").addEventListener("click", async (e) => {
   }
   searchBox.value = "";
 });
-
-/*
-    Aim ( Personal Additon = Message Box For success and Errors: createSuccessMssage(),RemoveSuccessMssage(): the function createSuccessMssage will create the pop up div with the inputs fields (messageColor,messageTitle, message,emoji,divbackground), RemoveSuccessMssage function will connect to the dismiss function and remove the div when clicked, then the rest of the functions (lunchSuccessMessageBox(), lunchErrorMessageBox(), lunchBadInputMessageBox(), lunchDeletedSuccessfulMessageBox()) will lunch different messages popups when being called, and will be removed when dismiss button gets clicked
-*/
 
 function createSuccessMssage(
   messageColor,
