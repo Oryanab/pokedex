@@ -1,0 +1,7 @@
+PUT http://localhost:8080/pokemon/catch/3
+Content-Type: application/json
+
+{
+    "username" : "oryan",
+    "id": 3
+}
