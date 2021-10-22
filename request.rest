@@ -1,7 +1,13 @@
-PUT http://localhost:8080/pokemon/catch/3
+# DELETE  http://localhost:8080/pokemon/release/13
+# Content-Type: application/json
+
+# {
+#     "username" : "oryan"
+# }
+
+PUT  http://localhost:8080/pokemon/catch/15
 Content-Type: application/json
 
 {
-    "username" : "oryan",
-    "id": 3
+    "username" : "oryan"
 }

@@ -46,10 +46,7 @@ function checkIfPokemonExist(usersJsonData, username, pokemonId) {
     catch pokemons END
 */
 router.get("/", (req, res) => {
-  const allUsersFile = fs.readFileSync(
-    path.resolve(__dirname, "../../user.json")
-  );
-  res.send(JSON.parse(allUsersFile.toString()));
+  res.send("welcome");
 });
 
 router.put("/catch/:id", (req, res) => {
@@ -62,32 +59,48 @@ router.put("/catch/:id", (req, res) => {
     existingPokemons.push(pokemon);
   }
   usersJsonData[req.body.username] = [];
-  usersJsonData[req.body.username].push(req.body.id);
+  usersJsonData[req.body.username].push(parseInt(req.params.id));
   for (let pokemon of existingPokemons) {
     if (!usersJsonData[req.body.username].includes(pokemon)) {
       usersJsonData[req.body.username].push(pokemon);
+    } else {
+      res.sendStatus(403);
     }
   }
   fs.writeFileSync("user.json", Buffer.from(JSON.stringify(usersJsonData)));
   res.json(usersJsonData);
+});
 
-  //   if (!checkIfUserExist(usersJsonData, req.body.username)) {
-  //     // need to create new user and push the id of the pokemon
-  //     usersJsonData[req.body.username] = [];
-  //     usersJsonData[req.body.username].push(req.body.id);
-  //     fs.writeFileSync("./users.json", JSON.stringify(usersJsonData));
-  //     res.json(usersJsonData);
-  //   } else if (
-  //     checkIfUserExist(usersJsonData, req.body.username) &&
-  //     !checkIfPokemonExist(usersJsonData, req.body.username, req.params.id)
-  //   ) {
-  //     // need to push the id of the pokemon
-  //     usersJsonData[req.body.username].push(req.body.id);
-  //     fs.writeFileSync("./users.json", JSON.stringify(usersJsonData));
-  //     res.json(usersJsonData);
-  //   } else {
-  //     res.json({ status: "Already caught" });
-  //   }
+router.delete("/release/:id", (req, res) => {
+  let allUsersFile = fs.readFileSync(
+    path.resolve(__dirname, "../../user.json")
+  );
+  let usersJsonData = JSON.parse(allUsersFile.toString());
+
+  for (let pokemon of usersJsonData[req.body.username]) {
+    if (pokemon === parseInt(req.params.id)) {
+      usersJsonData[req.body.username].splice(
+        usersJsonData[req.body.username].indexOf(pokemon),
+        1
+      );
+    } else {
+      res.sendStatus(403);
+    }
+  }
+  fs.writeFileSync("user.json", Buffer.from(JSON.stringify(usersJsonData)));
+  res.json(usersJsonData);
+});
+
+router.get("/users/:username", (req, res) => {
+  const allUsersFile = fs.readFileSync(
+    path.resolve(__dirname, "../../user.json")
+  );
+  let usersJsonData = JSON.parse(allUsersFile.toString());
+  Object.keys(usersJsonData).forEach((user) => {
+    if (user === req.params.username) {
+      res.json(usersJsonData[user]);
+    }
+  });
 });
 
 // get query pokemon response
