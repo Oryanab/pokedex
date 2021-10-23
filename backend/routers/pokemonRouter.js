@@ -28,15 +28,53 @@ const middleWarePokemonGet = errorHandler.middleWarePokemonGet;
 router.get("/:name", (req, res) => {
   P.getPokemonByName(req.params.name)
     .then(function (response) {
+      let types = [];
+      response.types.forEach((type) => {
+        types.push(type.type.name);
+      });
+      let abilities = [];
+      response.abilities.forEach((ability) => {
+        abilities.push(ability.ability.name);
+      });
       res.json({
         name: response.name,
         id: response.id,
         height: response.height,
         weight: response.weight,
-        types: response.types,
+        types: types,
         front_pic: response.sprites.front_default,
         back_pic: response.sprites.back_default,
-        abilities: response.abilities,
+        abilities: abilities,
+      });
+    })
+    .catch((err) => {
+      middleWarePokemonGet(err, req, res);
+    });
+});
+
+/*
+    get pokemon data search by id
+*/
+router.get("/get/:id", (req, res) => {
+  P.getPokemonByName(req.params.id)
+    .then(function (response) {
+      let types = [];
+      response.types.forEach((type) => {
+        types.push(type.type.name);
+      });
+      let abilities = [];
+      response.abilities.forEach((ability) => {
+        abilities.push(ability.ability.name);
+      });
+      res.json({
+        name: response.name,
+        id: response.id,
+        height: response.height,
+        weight: response.weight,
+        types: types,
+        front_pic: response.sprites.front_default,
+        back_pic: response.sprites.back_default,
+        abilities: abilities,
       });
     })
     .catch((err) => {
@@ -102,11 +140,6 @@ router.delete("/release/:id", middleWareDelete, (req, res) => {
   );
   fs.writeFileSync("user.json", Buffer.from(JSON.stringify(usersJsonData)));
   res.json(usersJsonData);
-});
-
-// get response id
-router.get("/get/:id", (req, res) => {
-  res.send(`hello ${req.params.id}`);
 });
 
 module.exports = router;

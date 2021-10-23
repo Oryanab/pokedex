@@ -1,17 +1,17 @@
-DELETE  http://localhost:8080/pokemon/release/80
+DELETE  http://localhost:8080/pokemon/release/100
 Content-Type: application/json
-username: new
+username: oryan
 
 {
-    "username" : "new"
+    "username" : "oryan"
 }
 
 # PUT  http://localhost:8080/pokemon/catch/100
 # Content-Type: application/json
-# username: new
+# username: oryan
 
 # {
-#     "username" : "new"
+#     "username" : "oryan"
 # }
 
 # POST  http://localhost:8080/users/orbyan/info
@@ -22,6 +22,8 @@ username: new
 # }
 
 # GET  http://localhost:8080/pokemon/ditto
+
+# GET  http://localhost:8080/pokemon/get/1
 
 
 # {
