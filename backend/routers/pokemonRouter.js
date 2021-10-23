@@ -42,8 +42,10 @@ router.get("/:name", (req, res) => {
         height: response.height,
         weight: response.weight,
         types: types,
-        front_pic: response.sprites.front_default,
-        back_pic: response.sprites.back_default,
+        sprites: {
+          front_default: response.sprites.front_default,
+          back_default: response.sprites.back_default,
+        },
         abilities: abilities,
       });
     })
@@ -72,8 +74,10 @@ router.get("/get/:id", (req, res) => {
         height: response.height,
         weight: response.weight,
         types: types,
-        front_pic: response.sprites.front_default,
-        back_pic: response.sprites.back_default,
+        sprites: {
+          front_default: response.sprites.front_default,
+          back_default: response.sprites.back_default,
+        },
         abilities: abilities,
       });
     })
