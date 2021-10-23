@@ -8,6 +8,10 @@ const P = new Pokedex();
 const fs = require("fs");
 const path = require("path");
 
+const isUserExist = require("./middleware/userHandler.js");
+const errorHandler = require("./middleware/errorHandler.js");
+
+// router.use();
 router.use((req, res, next) => {
   // chrome only work with this headers !
   res.append("Access-Control-Allow-Origin", ["*"]);
@@ -18,92 +22,9 @@ router.use((req, res, next) => {
 router.use(express.json());
 
 /*
-    catch pokemons section:
+    get pokemon data search by query
 */
-
-// check if user exist if it will return True
-function checkIfUserExist(usersJsonData, username) {
-  for (let user of Object.keys(usersJsonData)) {
-    if (username === user) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-}
-// check if the pokemon exist it will return True
-function checkIfPokemonExist(usersJsonData, username, pokemonId) {
-  for (let pokemon of usersJsonData[username]) {
-    if (pokemon === pokemonId) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-}
-
-/*
-    catch pokemons END
-*/
-router.get("/", (req, res) => {
-  res.send("welcome");
-});
-
-router.put("/catch/:id", (req, res) => {
-  let allUsersFile = fs.readFileSync(
-    path.resolve(__dirname, "../../user.json")
-  );
-  let usersJsonData = JSON.parse(allUsersFile.toString());
-  const existingPokemons = [];
-  for (let pokemon of usersJsonData[req.body.username]) {
-    existingPokemons.push(pokemon);
-  }
-  usersJsonData[req.body.username] = [];
-  usersJsonData[req.body.username].push(parseInt(req.params.id));
-  for (let pokemon of existingPokemons) {
-    if (!usersJsonData[req.body.username].includes(pokemon)) {
-      usersJsonData[req.body.username].push(pokemon);
-    } else {
-      res.sendStatus(403);
-    }
-  }
-  fs.writeFileSync("user.json", Buffer.from(JSON.stringify(usersJsonData)));
-  res.json(usersJsonData);
-});
-
-router.delete("/release/:id", (req, res) => {
-  let allUsersFile = fs.readFileSync(
-    path.resolve(__dirname, "../../user.json")
-  );
-  let usersJsonData = JSON.parse(allUsersFile.toString());
-
-  for (let pokemon of usersJsonData[req.body.username]) {
-    if (pokemon === parseInt(req.params.id)) {
-      usersJsonData[req.body.username].splice(
-        usersJsonData[req.body.username].indexOf(pokemon),
-        1
-      );
-    } else {
-      res.sendStatus(403);
-    }
-  }
-  fs.writeFileSync("user.json", Buffer.from(JSON.stringify(usersJsonData)));
-  res.json(usersJsonData);
-});
-
-router.get("/users/:username", (req, res) => {
-  const allUsersFile = fs.readFileSync(
-    path.resolve(__dirname, "../../user.json")
-  );
-  let usersJsonData = JSON.parse(allUsersFile.toString());
-  Object.keys(usersJsonData).forEach((user) => {
-    if (user === req.params.username) {
-      res.json(usersJsonData[user]);
-    }
-  });
-});
-
-// get query pokemon response
+const middleWarePokemonGet = errorHandler.middleWarePokemonGet;
 router.get("/:name", (req, res) => {
   P.getPokemonByName(req.params.name)
     .then(function (response) {
@@ -118,9 +39,69 @@ router.get("/:name", (req, res) => {
         abilities: response.abilities,
       });
     })
-    .catch(function (error) {
-      res.json({ Error: "There was an ERROR" });
+    .catch((err) => {
+      middleWarePokemonGet(err, req, res);
     });
+});
+
+/*
+    user confirmation
+*/
+router.use(isUserExist);
+const middleWarePut = errorHandler.middleWarePut;
+const middleWareDelete = errorHandler.middleWareDelete;
+
+/*
+   general functions:
+*/
+function returnUserJsonData() {
+  let allUsersFile = fs.readFileSync(
+    path.resolve(__dirname, "../../user.json")
+  );
+  let usersJsonData = JSON.parse(allUsersFile.toString());
+  return usersJsonData;
+}
+/*
+    pokemon home page
+*/
+router.get("/", (req, res) => {
+  res.send("welcome");
+});
+
+/*
+    Catch Pokemon
+*/
+
+//const middleWarePutSec = require("./middleware/errorHandler.js");
+// function middleWarePut(req, res, next) {
+//   let usersJsonData = returnUserJsonData();
+//   if (!usersJsonData[req.body.username].includes(parseInt(req.params.id))) {
+//     next();
+//   } else {
+//     res.sendStatus(403);
+//     //Cannot set headers after they are sent to the client
+//   }
+// }
+//const middleWarePutSec = require("./middleware/errorHandler.js");
+router.put("/catch/:id", middleWarePut, (req, res) => {
+  let usersJsonData = returnUserJsonData();
+  usersJsonData[req.body.username].push(parseInt(req.params.id));
+  fs.writeFileSync("user.json", Buffer.from(JSON.stringify(usersJsonData)));
+  res.json(usersJsonData);
+});
+
+/*
+   Release pokemon
+*/
+router.delete("/release/:id", middleWareDelete, (req, res) => {
+  let usersJsonData = returnUserJsonData();
+  //   if (usersJsonData[req.body.username].includes(parseInt(req.params.id))) {
+  usersJsonData[req.body.username].splice(
+    usersJsonData[req.body.username].indexOf(parseInt(req.params.id)),
+    1
+  );
+  fs.writeFileSync("user.json", Buffer.from(JSON.stringify(usersJsonData)));
+  res.json(usersJsonData);
 });
 
 // get response id

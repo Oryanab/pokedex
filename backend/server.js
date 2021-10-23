@@ -16,11 +16,11 @@ app.use(express.json());
 
 // app.use(express.urlencoded({ extended: true }));
 // route our app
-app.get("/", (req, res) => {
-  res.send("hello world!");
-});
+// app.get("/", (req, res) => {
+//   res.send("hello world!");
+// });
 
-app.use(express.json());
+// app.use(express.json());
 
 const pokemonRouter = require("./routers/pokemonRouter");
 app.use("/pokemon", pokemonRouter);
