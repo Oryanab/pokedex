@@ -2,15 +2,59 @@
 
 // get the pokemon json data:
 async function searchPokemon(pokemonName) {
-  let getPokemonJson = `https://murmuring-cove-95500.herokuapp.com/api/pokemon/${pokemonName}`;
+  let getPokemonJson = `http://localhost:8080/pokemon/${pokemonName}`;
+  //`https://murmuring-cove-95500.herokuapp.com/api/pokemon/${pokemonName}`;
   try {
     const pokemonJsonData = await axios.get(getPokemonJson);
-    lunchSuccessMessageBox();
     return pokemonJsonData["data"];
   } catch (e) {
     lunchErrorMessageBox();
   }
 }
+
+async function signUpUser(userName) {
+  let userSignUpUrl = "http://localhost:8080/users/signup";
+  try {
+    const confirmSignUp = await axios({
+      method: "post",
+      url: userSignUpUrl,
+      body: {
+        username: userName,
+      },
+      headers: {
+        "Content-Type": "application/json",
+        username: userName,
+      },
+    });
+    return confirmSignUp.status;
+  } catch (e) {
+    return e;
+  }
+}
+
+//const userName = document.querySelector("#username").value;
+async function userAuth(userName) {
+  let userAuth = `http://localhost:8080/users/${userName}/info`;
+  try {
+    const checkUserData = await axios({
+      method: "post",
+      url: userAuth,
+      body: {
+        username: userName,
+      },
+      headers: { "Content-Type": "application/json" },
+    });
+    return checkUserData.status;
+  } catch (e) {
+    return e;
+  }
+}
+
+document.querySelector("#btn-signup").addEventListener("click", async (e) => {
+  e.preventDefault();
+  const newUserName = document.querySelector("#sign-up-area").value;
+  return await signUpUser(newUserName);
+});
 
 // get all parameters and write all in html this will happen on Click
 async function createDomFromApi(pokemon) {
@@ -18,25 +62,108 @@ async function createDomFromApi(pokemon) {
   const pokemonJsonData = await searchPokemon(pokemon);
   // select all html result div elements
   const pokemonName = document.querySelector("#pokemon-name");
+  const pokemonId = document.querySelector("#pokemon-id");
   const pokemonHeight = document.querySelector("#pokemon-height");
   const pokemonWeight = document.querySelector("#pokemon-weight");
-
-  // change the values to the pokemon details
-  pokemonName.textContent = pokemonJsonData["name"];
-  pokemonHeight.textContent = pokemonJsonData["height"];
-  pokemonWeight.textContent = pokemonJsonData["weight"];
-
-  createDomPokemonTypes(pokemonJsonData);
-  createDomPokemonImg(pokemonJsonData);
+  const username = document.querySelector("#username").value;
+  const titleResults = document.querySelector("#title-results");
+  if ((await userAuth(username)) === 200) {
+    lunchSuccessMessageBox();
+    titleResults.textContent = `Hello ${username}:`;
+    // change the values to the pokemon details
+    pokemonName.textContent = pokemonJsonData.name;
+    pokemonId.textContent = pokemonJsonData.id;
+    pokemonHeight.textContent = pokemonJsonData.height;
+    pokemonWeight.textContent = pokemonJsonData.weight;
+    createDomPokemonTypes(pokemonJsonData);
+    createDomPokemonImg(pokemonJsonData);
+  } else {
+    alert("user ant sign up");
+  }
 }
+
+/*
+  catch button functionality
+*/
+document.querySelector("#catch").addEventListener("click", async (e) => {
+  const userName = document.querySelector("#username").value;
+  const pokemonID = document.querySelector("#pokemon-id").textContent;
+  let putRequestCatchPokemon = `http://localhost:8080/pokemon/catch/${pokemonID}`;
+  try {
+    const requestCatchPokemon = await axios({
+      method: "PUT",
+      url: putRequestCatchPokemon,
+      data: {
+        username: userName,
+        id: pokemonID,
+      },
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        username: userName,
+      },
+    });
+    console.log(await requestCatchPokemon.json());
+  } catch (e) {
+    console.log("pokemon already caught");
+  }
+});
+
+/*
+  release button functionality
+*/
+document.querySelector("#release").addEventListener("click", async (e) => {
+  const userName = document.querySelector("#username").value;
+  const pokemonID = document.querySelector("#pokemon-id").textContent;
+  let putRequestDeletePokemon = `http://localhost:8080/pokemon/release/${pokemonID}`;
+  try {
+    const requestDeletePokemon = await axios({
+      method: "DELETE",
+      url: putRequestDeletePokemon,
+      data: {
+        username: userName,
+        id: pokemonID,
+      },
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        username: userName,
+      },
+    });
+    console.log(await requestCatchPokemon.json());
+  } catch (e) {
+    console.log("pokemon aint caught");
+  }
+});
+
+// async function releasePokemon(pokemonID, userName) {
+//   let deleteRequestReleasePokemon = `http://localhost:8080/pokemon/release/${pokemonID}`;
+//   try {
+//     const requestDeletePokemon = await axios({
+//       method: "DELETE",
+//       url: deleteRequestReleasePokemon,
+//       body: {
+//         username: userName,
+//       },
+//       headers: {
+//         "Content-Type": "application/json",
+//         username: userName,
+//       },
+//     });
+//     console.log(requestDeletePokemon.status);
+//   } catch (e) {
+//     console.log("pokemon was never caught");
+//     return e;
+//   }
+// }
 
 /*
   createDomPokemonTypes: Create the Types Section
 */
-async function createDomPokemonTypes(json) {
+async function createDomPokemonTypes(types) {
   const pokemonTypes = document.querySelector("#pokemon-types");
   pokemonTypes.innerHTML = "";
-  const pokemonJsonData = await json;
+  const pokemonJsonData = await types;
   for (let type of pokemonJsonData["types"]) {
     const newType = document.createElement("p");
     newType.textContent = type;
@@ -105,6 +232,8 @@ async function generatedRelatedPokemon(json) {
 }
 
 document.getElementById("btn").addEventListener("click", async (e) => {
+  e.preventDefault();
+  const username = document.querySelector("#username");
   const searchBox = document.getElementById("textarea");
   try {
     document.getElementById("related-pokemon").remove();
@@ -116,6 +245,7 @@ document.getElementById("btn").addEventListener("click", async (e) => {
     createDomFromApi(searchBox.value);
   }
   searchBox.value = "";
+  //username.value = "";
 });
 
 function createSuccessMssage(
@@ -203,6 +333,12 @@ function lunchSuccessReturnTypes() {
     "✔️",
     "white"
   );
+  const successMssageBox = document.getElementById("successMssageBox");
+  successMssageBox.classList.add("active");
+}
+
+function lunchBadAuthUserNotFound() {
+  createSuccessMssage("red", "Error", "User Not Found", "❌", "white");
   const successMssageBox = document.getElementById("successMssageBox");
   successMssageBox.classList.add("active");
 }

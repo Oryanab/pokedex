@@ -6,14 +6,14 @@ const router = express.Router();
 const fs = require("fs");
 const path = require("path");
 
-router.use((req, res, next) => {
-  // chrome only work with this headers !
-  res.append("Access-Control-Allow-Origin", ["*"]);
-  res.append("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE");
-  res.append("Access-Control-Allow-Headers", "Content-Type");
-  next();
-});
-router.use(express.json());
+// router.use((req, res, next) => {
+//   // chrome only work with this headers !
+//   res.append("Access-Control-Allow-Origin", ["*"]);
+//   res.append("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE");
+//   res.append("Access-Control-Allow-Headers", "Content-Type");
+//   next();
+// });
+// router.use(express.json());
 
 /*
   Get json data
@@ -39,6 +39,18 @@ router.post("/:username/info", (req, res) => {
   let usersJsonData = returnUserJsonData();
   if (Object.keys(usersJsonData).includes(req.params.username)) {
     res.json({ username: req.body.username });
+    res.sendStatus(200);
+  } else {
+    res.sendStatus(401);
+  }
+});
+
+router.post("/signup", (req, res) => {
+  let usersJsonData = returnUserJsonData();
+  if (!Object.keys(usersJsonData).includes(req.headers.username)) {
+    usersJsonData[req.headers.username] = [];
+    fs.writeFileSync("user.json", Buffer.from(JSON.stringify(usersJsonData)));
+    res.json(usersJsonData);
   } else {
     res.sendStatus(401);
   }

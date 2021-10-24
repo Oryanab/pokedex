@@ -23,6 +23,16 @@ body {
   align-items: center;
   font-family: "Fira Code", monospace;
 }
+#username {
+  width: 80%;
+  align-items: center;
+  font-family: "Fira Code", monospace;
+}
+#sign-up-area {
+  width: 80%;
+  align-items: center;
+  font-family: "Fira Code", monospace;
+}
 .placeholder {
   display: block;
   /* margin: auto; */
@@ -74,6 +84,48 @@ body {
   background-image: -ms-linear-gradient(top, #ffffff, #7b7c7d);
   background-image: -o-linear-gradient(top, #ffffff, #7b7c7d);
   background-image: linear-gradient(to bottom, #ffffff, #7b7c7d);
+  text-decoration: none;
+}
+
+#btn-signup {
+  background: #ffffff;
+  width: 80%;
+  border: solid white;
+  font-family: "Fira Code", monospace;
+  color: #4f484f;
+  font-size: 12px;
+  margin-top: 5px;
+  padding: 14px;
+  text-decoration: none;
+  box-shadow: rgb(155, 144, 144);
+  z-index: 3;
+  font-size: 20px;
+}
+
+#btn-signup:hover {
+  background: #ffffff;
+  background-image: -webkit-linear-gradient(top, #ffffff, #7b7c7d);
+  background-image: -moz-linear-gradient(top, #ffffff, #7b7c7d);
+  background-image: -ms-linear-gradient(top, #ffffff, #7b7c7d);
+  background-image: -o-linear-gradient(top, #ffffff, #7b7c7d);
+  background-image: linear-gradient(to bottom, #ffffff, #7b7c7d);
+  text-decoration: none;
+}
+
+.catch-release-btn {
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0px;
+  font-family: Arial;
+  color: #ffffff;
+  font-size: 15px;
+  background: #ff2663;
+  padding: 10px 20px 10px 20px;
+  text-decoration: none;
+}
+
+.catch-release-btn:hover {
+  background: #f74040;
   text-decoration: none;
 }
 

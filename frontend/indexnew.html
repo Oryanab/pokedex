@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="index.css"></link>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    <script src="index.js" defer></script>
+    <script src="indexnew.js" defer></script>
     <title>Pokedex</title>
   </head>
   <body>
@@ -21,20 +21,21 @@
         <button id='btn'>Check Your Pokemon</button>
         <h1  class='title'>Please Sign Up</h1>
         <textarea placeholder='Enter a Pokemon Name Or ID...' name="" id="sign-up-area" cols="20" rows="1" autofocus></textarea>
-        <button id='btn-signup'>Sign Up</button>
+        <button type="button" id='btn-signup' >Sign Up</button>
     </div>
     <div class="result">
         <h1 class='title' id='title-results'>Results:</h1>
         <div id='result-div'>
-            <button class="catch-release-btn" type="button" id="catch">Catch</button>
-            <button class="catch-release-btn" type="button" id="release">Release</button>
             <p>Name: <span  id ='pokemon-name'></span></p>
             <p>ID: <span  id ='pokemon-id'></span></p>
             <p>Height:<span id ='pokemon-height'></span></p>
             <p>Weight: <span id ='pokemon-weight'></span></p>
             <p>Types:<ul id ='pokemon-types'></ul></p>
+            <button type="button">Catch</button>
+            <button type="button">Release</button>
             <img id="poke-image" src="" alt="">
-            <button class="catch-release-btn" type="button" id="my-pokemon">My Pokemons</button>
+            <p>Related Pokemons:<ul id ='pokemon-types'></ul></p>
+
         </div>
     </div>
     

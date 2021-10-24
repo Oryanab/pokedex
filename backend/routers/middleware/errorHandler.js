@@ -27,7 +27,7 @@ function middleWarePokemonGet(err, req, res, next) {
 
 function middleWarePut(req, res, next) {
   let usersJsonData = returnUserJsonData();
-  if (!usersJsonData[req.body.username].includes(parseInt(req.params.id))) {
+  if (!usersJsonData[req.body.username].includes(parseInt(req.body.id))) {
     next();
   } else {
     res.sendStatus(403);

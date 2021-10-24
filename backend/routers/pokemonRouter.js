@@ -11,15 +11,15 @@ const path = require("path");
 const isUserExist = require("./middleware/userHandler.js");
 const errorHandler = require("./middleware/errorHandler.js");
 
-// router.use();
-router.use((req, res, next) => {
-  // chrome only work with this headers !
-  res.append("Access-Control-Allow-Origin", ["*"]);
-  res.append("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE");
-  res.append("Access-Control-Allow-Headers", "Content-Type");
-  next();
-});
-router.use(express.json());
+// // router.use();
+// router.use((req, res, next) => {
+//   // chrome only work with this headers !
+//   res.append("Access-Control-Allow-Origin", ["*"]);
+//   res.append("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE");
+//   res.append("Access-Control-Allow-Headers", "Content-Type");
+//   next();
+// });
+// router.use(express.json());
 
 /*
     get pokemon data search by query
@@ -127,9 +127,9 @@ router.get("/", (req, res) => {
 //const middleWarePutSec = require("./middleware/errorHandler.js");
 router.put("/catch/:id", middleWarePut, (req, res) => {
   let usersJsonData = returnUserJsonData();
-  usersJsonData[req.body.username].push(parseInt(req.params.id));
+  usersJsonData[req.body.username].push(parseInt(req.body.id));
   fs.writeFileSync("user.json", Buffer.from(JSON.stringify(usersJsonData)));
-  res.json(usersJsonData);
+  res.json(usersJsonData[req.body.username]);
 });
 
 /*
@@ -139,11 +139,11 @@ router.delete("/release/:id", middleWareDelete, (req, res) => {
   let usersJsonData = returnUserJsonData();
   //   if (usersJsonData[req.body.username].includes(parseInt(req.params.id))) {
   usersJsonData[req.body.username].splice(
-    usersJsonData[req.body.username].indexOf(parseInt(req.params.id)),
+    usersJsonData[req.body.username].indexOf(parseInt(req.body.id)),
     1
   );
   fs.writeFileSync("user.json", Buffer.from(JSON.stringify(usersJsonData)));
-  res.json(usersJsonData);
+  res.json(usersJsonData[req.body.username]);
 });
 
 module.exports = router;
