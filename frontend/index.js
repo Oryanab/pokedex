@@ -26,9 +26,9 @@ async function signUpUser(userName) {
         username: userName,
       },
     });
-    return confirmSignUp.status;
+    lunchSuccessSignUp();
   } catch (e) {
-    return e;
+    lunchUserAlreadyExist();
   }
 }
 
@@ -78,7 +78,7 @@ async function createDomFromApi(pokemon) {
     createDomPokemonTypes(pokemonJsonData);
     createDomPokemonImg(pokemonJsonData);
   } else {
-    alert("user ant sign up");
+    lunchUserHasToSignUp();
   }
 }
 
@@ -103,9 +103,9 @@ document.querySelector("#catch").addEventListener("click", async (e) => {
         username: userName,
       },
     });
-    console.log(await requestCatchPokemon.json());
+    lunchPokemonSuccessCaught();
   } catch (e) {
-    console.log("pokemon already caught");
+    lunchPokemonAlreadyCaught();
   }
 });
 
@@ -130,32 +130,44 @@ document.querySelector("#release").addEventListener("click", async (e) => {
         username: userName,
       },
     });
-    console.log(await requestCatchPokemon.json());
+
+    lunchPokemonSuccessReleased();
   } catch (e) {
-    console.log("pokemon aint caught");
+    lunchPokemonCantBeReleased();
   }
 });
 
-// async function releasePokemon(pokemonID, userName) {
-//   let deleteRequestReleasePokemon = `http://localhost:8080/pokemon/release/${pokemonID}`;
-//   try {
-//     const requestDeletePokemon = await axios({
-//       method: "DELETE",
-//       url: deleteRequestReleasePokemon,
-//       body: {
-//         username: userName,
-//       },
-//       headers: {
-//         "Content-Type": "application/json",
-//         username: userName,
-//       },
-//     });
-//     console.log(requestDeletePokemon.status);
-//   } catch (e) {
-//     console.log("pokemon was never caught");
-//     return e;
-//   }
-// }
+/*
+  create caught pokemons 
+*/
+
+document.querySelector("#my-pokemon").addEventListener("click", async (e) => {
+  const username = document.querySelector("#username").value;
+  try {
+    const userCaughtPokemons = await axios.get(
+      `http://localhost:8080/users/${username}`
+    );
+    let allPokemons = "";
+    for (let pokemon of userCaughtPokemons.data) {
+      const { name } = await searchPokemon(pokemon);
+      allPokemons += name + ", ";
+    }
+    function lunchAllPokemons() {
+      createSuccessMssage(
+        "red",
+        "MY POKEMONS",
+        `check out your pokemons: ${allPokemons}`,
+        "🥎",
+        "white"
+      );
+      const successMssageBox = document.getElementById("successMssageBox");
+      successMssageBox.classList.add("active");
+    }
+    lunchAllPokemons();
+  } catch (e) {
+    console.log("user not found");
+  }
+});
 
 /*
   createDomPokemonTypes: Create the Types Section
@@ -233,7 +245,6 @@ async function generatedRelatedPokemon(json) {
 
 document.getElementById("btn").addEventListener("click", async (e) => {
   e.preventDefault();
-  const username = document.querySelector("#username");
   const searchBox = document.getElementById("textarea");
   try {
     document.getElementById("related-pokemon").remove();
@@ -245,7 +256,6 @@ document.getElementById("btn").addEventListener("click", async (e) => {
     createDomFromApi(searchBox.value);
   }
   searchBox.value = "";
-  //username.value = "";
 });
 
 function createSuccessMssage(
@@ -337,8 +347,69 @@ function lunchSuccessReturnTypes() {
   successMssageBox.classList.add("active");
 }
 
-function lunchBadAuthUserNotFound() {
-  createSuccessMssage("red", "Error", "User Not Found", "❌", "white");
+// user exist
+function lunchUserAlreadyExist() {
+  createSuccessMssage("red", "Error", "User Already Exist", "❌", "white");
+  const successMssageBox = document.getElementById("successMssageBox");
+  successMssageBox.classList.add("active");
+}
+
+function lunchUserHasToSignUp() {
+  createSuccessMssage("red", "Error", "User Has To Sign Up!", "❌", "white");
+  const successMssageBox = document.getElementById("successMssageBox");
+  successMssageBox.classList.add("active");
+}
+
+function lunchSuccessSignUp() {
+  createSuccessMssage(
+    "green",
+    "Success",
+    "user Sign Up Successfully",
+    "✔️",
+    "white"
+  );
+  const successMssageBox = document.getElementById("successMssageBox");
+  successMssageBox.classList.add("active");
+}
+
+function lunchPokemonAlreadyCaught() {
+  createSuccessMssage("red", "Error", "Pokemon Already Caught", "❌", "white");
+  const successMssageBox = document.getElementById("successMssageBox");
+  successMssageBox.classList.add("active");
+}
+
+function lunchPokemonSuccessCaught() {
+  createSuccessMssage(
+    "green",
+    "Success",
+    "Pokemon Caught successfully",
+    "✔️",
+    "white"
+  );
+  const successMssageBox = document.getElementById("successMssageBox");
+  successMssageBox.classList.add("active");
+}
+
+function lunchPokemonCantBeReleased() {
+  createSuccessMssage(
+    "red",
+    "Error",
+    "Uncaught Pokemon Cant be released",
+    "❌",
+    "white"
+  );
+  const successMssageBox = document.getElementById("successMssageBox");
+  successMssageBox.classList.add("active");
+}
+
+function lunchPokemonSuccessReleased() {
+  createSuccessMssage(
+    "green",
+    "Success",
+    "Pokemon successfully Released",
+    "✔️",
+    "white"
+  );
   const successMssageBox = document.getElementById("successMssageBox");
   successMssageBox.classList.add("active");
 }
