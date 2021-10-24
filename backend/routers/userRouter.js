@@ -6,15 +6,6 @@ const router = express.Router();
 const fs = require("fs");
 const path = require("path");
 
-// router.use((req, res, next) => {
-//   // chrome only work with this headers !
-//   res.append("Access-Control-Allow-Origin", ["*"]);
-//   res.append("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE");
-//   res.append("Access-Control-Allow-Headers", "Content-Type");
-//   next();
-// });
-// router.use(express.json());
-
 /*
   Get json data
 */
@@ -57,32 +48,3 @@ router.post("/signup", (req, res) => {
 });
 
 module.exports = router;
-
-// /*
-//     catch pokemons section:
-// */
-// function checkIfUserExist(dirname) {
-//     if (!fs.existsSync(`./user/${dirname}`)) {
-//       fs.mkdirSync(dirname, { recursive: true });
-//       return true;
-//     } else {
-//       return false;
-//     }
-//   }
-
-//   function checkIfPokemonExist(dirname, pokemonId) {
-//     if (!fs.existsSync(`./user/${dirname}/${pokemonId}`)) {
-//       fs.writeFileSync(
-//         `./user/${dirname}/${pokemonId}.json`,
-//         JSON.stringify({
-//           pokemon: pokemonId,
-//         })
-//       );
-//       return true;
-//     } else {
-//       return false;
-//     }
-//   }
-//   /*
-//       catch pokemons END
-//   */

@@ -2,16 +2,6 @@ const express = require("express");
 const userHandlerRouter = express.Router();
 const fs = require("fs");
 const path = require("path");
-// ///
-// userHandlerRouter.use((req, res, next) => {
-//   // chrome only work with this headers !
-//   res.append("Access-Control-Allow-Origin", ["*"]);
-//   res.append("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE");
-//   res.append("Access-Control-Allow-Headers", "Content-Type");
-//   next();
-// });
-// userHandlerRouter.use(express.json());
-// ///
 
 function returnUserJsonData() {
   let allUsersFile = fs.readFileSync(
@@ -37,7 +27,7 @@ function middleWarePut(req, res, next) {
 
 function middleWareDelete(req, res, next) {
   let usersJsonData = returnUserJsonData();
-  if (usersJsonData[req.body.username].includes(parseInt(req.params.id))) {
+  if (usersJsonData[req.body.username].includes(parseInt(req.body.id))) {
     next();
   } else {
     res.sendStatus(403);

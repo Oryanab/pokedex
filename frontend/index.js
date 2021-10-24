@@ -3,7 +3,6 @@
 // get the pokemon json data:
 async function searchPokemon(pokemonName) {
   let getPokemonJson = `http://localhost:8080/pokemon/${pokemonName}`;
-  //`https://murmuring-cove-95500.herokuapp.com/api/pokemon/${pokemonName}`;
   try {
     const pokemonJsonData = await axios.get(getPokemonJson);
     return pokemonJsonData["data"];

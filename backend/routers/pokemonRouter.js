@@ -11,16 +11,6 @@ const path = require("path");
 const isUserExist = require("./middleware/userHandler.js");
 const errorHandler = require("./middleware/errorHandler.js");
 
-// // router.use();
-// router.use((req, res, next) => {
-//   // chrome only work with this headers !
-//   res.append("Access-Control-Allow-Origin", ["*"]);
-//   res.append("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE");
-//   res.append("Access-Control-Allow-Headers", "Content-Type");
-//   next();
-// });
-// router.use(express.json());
-
 /*
     get pokemon data search by query
 */
@@ -113,18 +103,6 @@ router.get("/", (req, res) => {
 /*
     Catch Pokemon
 */
-
-//const middleWarePutSec = require("./middleware/errorHandler.js");
-// function middleWarePut(req, res, next) {
-//   let usersJsonData = returnUserJsonData();
-//   if (!usersJsonData[req.body.username].includes(parseInt(req.params.id))) {
-//     next();
-//   } else {
-//     res.sendStatus(403);
-//     //Cannot set headers after they are sent to the client
-//   }
-// }
-//const middleWarePutSec = require("./middleware/errorHandler.js");
 router.put("/catch/:id", middleWarePut, (req, res) => {
   let usersJsonData = returnUserJsonData();
   usersJsonData[req.body.username].push(parseInt(req.body.id));

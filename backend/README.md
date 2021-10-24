@@ -1,2 +1,0 @@
-- got the server up
-- got the pokemon route connected
