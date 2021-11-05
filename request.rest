@@ -1,0 +1,39 @@
+# DELETE  http://localhost:8080/pokemon/release/100
+# Content-Type: application/json
+# username: oryan
+
+# {
+#     "username" : "oryan"
+# }
+
+PUT  http://localhost:8080/pokemon/catch/11
+Content-Type: application/json
+username: oryan
+
+{
+    "username" : "oryan",
+    "id":"11"
+}
+
+# POST  http://localhost:8080/users/n/info
+# Content-Type: application/json
+
+# {
+#     "username" : "n"
+# }
+
+# POST  http://localhost:8080/users/signup
+# Content-Type: application/json
+# username: dd4
+
+# {
+#     "username" : "dd4"
+# }
+
+# GET  http://localhost:8080/pokemon/ditto
+
+# GET  http://localhost:8080/pokemon/get/1
+
+
+# {
+# }

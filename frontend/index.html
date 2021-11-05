@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <link rel="shortcut icon" type="image/x-icon" href="https://iconape.com/wp-content/png_logo_vector/pikachu-logo.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="index.css"></link>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="index.js" defer></script>
+    <title>Pokedex</title>
+  </head>
+  <body>
+    <h1 style="text-align: center;">Welcome to the Pokemon Finder!</h1>
+    <div class="flex-items"> 
+    <div class="placeholder">
+        <h1  class='title'>Enter your Username:</h1>
+        <textarea placeholder='my username..' name="" id="username" cols="20" rows="2" autofocus></textarea>
+        <h1  class='title'>Enter a Pokemon Name:</h1>
+        <textarea placeholder='Enter a Pokemon Name Or ID...' name="" id="textarea" cols="20" rows="2" autofocus></textarea>
+        <button id='btn'>Check Your Pokemon</button>
+        <h1  class='title'>Please Sign Up</h1>
+        <textarea placeholder='Sign-up with your username..' name="" id="sign-up-area" cols="20" rows="1" autofocus></textarea>
+        <button id='btn-signup'>Sign Up</button>
+    </div>
+    <div class="result">
+        <h1 class='title' id='title-results'>Results:</h1>
+        <div id='result-div'>
+            <button class="catch-release-btn" type="button" id="catch">Catch</button>
+            <button class="catch-release-btn" type="button" id="release">Release</button>
+            <p>Name: <span  id ='pokemon-name'></span></p>
+            <p>ID: <span  id ='pokemon-id'></span></p>
+            <p>Height:<span id ='pokemon-height'></span></p>
+            <p>Weight: <span id ='pokemon-weight'></span></p>
+            <p>Types:<ul id ='pokemon-types'></ul></p>
+            <img id="poke-image" src="" alt="">
+            <br>
+            <button class="catch-release-btn" type="button" id="my-pokemon">My Pokemons</button>
+        </div>
+    </div>
+    
+    </div>
+    
+    
+  </body>
+</html>
